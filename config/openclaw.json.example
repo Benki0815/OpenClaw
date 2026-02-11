@@ -1,0 +1,25 @@
+{
+  "agent": {
+    "model": "openrouter/anthropic/claude-opus-4-6"
+  },
+  "gateway": {
+    "bind": "lan",
+    "port": 18789,
+    "auth": {
+      "mode": "token"
+    }
+  },
+  "channels": {
+    "telegram": {
+      "dmPolicy": "pairing"
+    }
+  },
+  "discovery": {
+    "mdns": {
+      "mode": "off"
+    }
+  },
+  "logging": {
+    "redactSensitive": "tools"
+  }
+}

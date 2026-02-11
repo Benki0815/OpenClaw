@@ -1,0 +1,91 @@
+# ============================================================
+# OpenClaw – Docker Compose (Synology NAS Deployment)
+# ============================================================
+# Deploy-Pfad auf NAS: /volume1/docker/openclaw/
+# Starten:   sudo docker compose up -d
+# Stoppen:   sudo docker compose down
+# CLI:       sudo docker compose run --rm openclaw-cli <befehl>
+# Logs:      sudo docker compose logs -f openclaw-gateway
+# ============================================================
+
+services:
+  # --- OpenClaw Gateway (Hauptdienst) ---
+  openclaw-gateway:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw-gateway
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - HOME=/home/node
+      - NODE_ENV=production
+      - TERM=xterm-256color
+    volumes:
+      - ./config:/home/node/.openclaw
+      - ./workspace:/home/node/.openclaw/workspace
+    ports:
+      # NUR localhost – kein LAN-Zugriff! Tailscale Serve macht den Rest.
+      - "127.0.0.1:18789:18789"
+    networks:
+      - openclaw_net
+    # Security Hardening
+    security_opt:
+      - no-new-privileges:true
+    extra_hosts:
+      # Damit OpenClaw den Home Assistant auf dem Host erreichen kann (spätere Phase)
+      - "host.docker.internal:host-gateway"
+    labels:
+      # Watchtower: Diesen Container automatisch updaten
+      - "com.centurylinklabs.watchtower.enable=true"
+    command:
+      [
+        "node", "dist/index.js", "gateway",
+        "--bind", "lan",
+        "--port", "18789"
+      ]
+
+  # --- OpenClaw CLI (für Onboarding & Management) ---
+  # Wird nur manuell ausgeführt:
+  #   sudo docker compose run --rm openclaw-cli onboard --no-install-daemon
+  #   sudo docker compose run --rm openclaw-cli channels add --channel telegram --token "..."
+  openclaw-cli:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw-cli
+    env_file:
+      - .env
+    environment:
+      - HOME=/home/node
+    volumes:
+      - ./config:/home/node/.openclaw
+      - ./workspace:/home/node/.openclaw/workspace
+    networks:
+      - openclaw_net
+    entrypoint: ["node", "dist/index.js"]
+    profiles:
+      - cli
+
+  # --- Watchtower (Auto-Updates) ---
+  # Prüft täglich auf neue GHCR-Images und aktualisiert den Gateway-Container.
+  # Aktualisiert NUR Container mit dem Label watchtower.enable=true.
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: openclaw-watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=86400
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_INCLUDE_STOPPED=false
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr
+      # Optional: Telegram-Benachrichtigung bei Updates
+      # - WATCHTOWER_NOTIFICATION_URL=telegram://TOKEN@telegram/?channels=CHAT_ID
+    labels:
+      # Watchtower soll sich NICHT selbst updaten (Sicherheit)
+      - "com.centurylinklabs.watchtower.enable=false"
+
+networks:
+  openclaw_net:
+    driver: bridge
+    name: openclaw_net

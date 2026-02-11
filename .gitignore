@@ -1,0 +1,42 @@
+# === Secrets ===
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# === Backups ===
+backups/
+*.bak
+*.backup
+
+# === Logs ===
+logs/
+*.log
+
+# === OS ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === IDE ===
+.vscode/settings.json
+.vscode/launch.json
+*.swp
+*.swo
+*~
+
+# === Docker data (if accidentally committed) ===
+config/openclaw.json
+config/credentials/
+config/agents/
+config/extensions/
+config/sandboxes/
+workspace/
+
+# === Node ===
+node_modules/
+
+# === Temp ===
+tmp/
+temp/
