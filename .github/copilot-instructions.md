@@ -21,8 +21,10 @@
 - OC-Workspace-Verzeichnis: /volume1/docker/openclaw/workspace
 - OC-Compose-Pfad: /volume1/docker/openclaw/docker-compose.yml
 - OC-Env-Pfad: /volume1/docker/openclaw/.env
-- OC-Gateway-URL (Tailscale): https://benki-nas3.tail73ca5d.ts.net/
-- OC-Gateway-Port: 18789 (nur localhost, Tailscale Serve davor)
+- OC-Gateway-URL (Tailscale): https://benki-nas3.tail73ca5d.ts.net:8443/
+- OC-Gateway-Port: 18789 (nur localhost, Tailscale Serve auf HTTPS 8443 davor)
+- OC-Tailscale-Serve: Port 443 = Home Assistant, Port 8443 = OpenClaw
+- OC-Startup-Time: ~60-90s auf dem NAS (Celeron J4025, langsam)
 - LLM-Provider: OpenRouter (verschiedene Modelle, wechselbar)
 - Messaging: Telegram Bot (Phase 1)
 - Home Assistant: Vorbereitet (spätere Phase)

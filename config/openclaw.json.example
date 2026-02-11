@@ -1,25 +1,15 @@
 {
-  "agent": {
-    "model": "openrouter/anthropic/claude-opus-4-6"
-  },
-  "gateway": {
-    "bind": "lan",
-    "port": 18789,
-    "auth": {
-      "mode": "token"
+  "agents": {
+    "defaults": {
+      "model": { "primary": "openrouter/anthropic/claude-sonnet-4-5" }
     }
   },
   "channels": {
     "telegram": {
+      "enabled": true,
       "dmPolicy": "pairing"
     }
   },
-  "discovery": {
-    "mdns": {
-      "mode": "off"
-    }
-  },
-  "logging": {
-    "redactSensitive": "tools"
-  }
+  "discovery": { "mdns": { "mode": "off" } },
+  "logging": { "redactSensitive": "tools" }
 }

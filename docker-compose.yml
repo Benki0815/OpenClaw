@@ -41,7 +41,8 @@ services:
       [
         "node", "dist/index.js", "gateway",
         "--bind", "lan",
-        "--port", "18789"
+        "--port", "18789",
+        "--allow-unconfigured"
       ]
 
   # --- OpenClaw CLI (für Onboarding & Management) ---

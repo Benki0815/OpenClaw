@@ -22,14 +22,14 @@
 - ✅ **C-04**: `.gitignore`, `.env.example`, `docker-compose.yml` erstellen
 - ✅ **C-05**: `config/openclaw.json.example` erstellen
 - ✅ **C-06**: Todo-Listen erstellen
-- ⬜ **C-07**: `copilot-instructions.md` aktualisieren
-- ⬜ **C-08**: Git-Commit + Push
+- ✅ **C-07**: `copilot-instructions.md` aktualisieren
+- ✅ **C-08**: Git-Commit + Push
 
 ---
 
 ## Phase 1: NAS-Verzeichnisse vorbereiten
 
-- ⬜ **C-10**: Verzeichnisse erstellen und Rechte setzen
+- ✅ **C-10**: Verzeichnisse erstellen und Rechte setzen
 
 ```bash
 ssh Benki-NAS3 << 'EOF'
@@ -46,13 +46,13 @@ EOF
 
 ## Phase 2: Dateien auf NAS deployen
 
-- ⬜ **C-20**: docker-compose.yml auf NAS kopieren
+- ✅ **C-20**: docker-compose.yml auf NAS kopieren
 
 ```bash
 scp docker-compose.yml Benki-NAS3:/volume1/docker/openclaw/docker-compose.yml
 ```
 
-- ⬜ **C-21**: .env-Grundgerüst auf NAS erstellen (Platzhalter)
+- ✅ **C-21**: .env-Grundgerüst auf NAS erstellen (Platzhalter)
 
 ```bash
 ssh Benki-NAS3 << 'ENVEOF'
@@ -69,13 +69,13 @@ sudo chmod 600 /volume1/docker/openclaw/.env
 ENVEOF
 ```
 
-- ⏸️ **C-22**: Warte auf Benki → `.env`-Werte eintragen (siehe `todo_benki.md`)
+- ✅ **C-22**: .env-Werte eingetragen (Gateway-Token, OpenRouter, Telegram)
 
 ---
 
 ## Phase 3: Gateway-Token generieren
 
-- ⬜ **C-30**: Token generieren und in .env eintragen
+- ✅ **C-30**: Token generieren und in .env eintragen
 
 ```bash
 ssh Benki-NAS3 << 'EOF'
@@ -90,7 +90,7 @@ EOF
 
 ## Phase 4: Docker Image ziehen
 
-- ⬜ **C-40**: Image pullen
+- ✅ **C-40**: Image pullen
 
 ```bash
 ssh Benki-NAS3 << 'EOF'
@@ -103,7 +103,7 @@ EOF
 
 ## Phase 5: Onboarding (interaktiv)
 
-- ⏸️ **C-50**: Onboarding-Wizard – erfordert interaktive Eingabe von Benki
+- ✅ **C-50**: Config manuell erstellt (Onboarding-Wizard übersprungen, --allow-unconfigured)
 
 ```bash
 ssh -t Benki-NAS3 "cd /volume1/docker/openclaw && sudo /var/packages/ContainerManager/target/usr/bin/docker compose run --rm openclaw-cli onboard --no-install-daemon"
@@ -115,7 +115,7 @@ ssh -t Benki-NAS3 "cd /volume1/docker/openclaw && sudo /var/packages/ContainerMa
 
 ## Phase 6: Gateway starten
 
-- ⬜ **C-60**: Container starten
+- ✅ **C-60**: Container starten
 
 ```bash
 ssh Benki-NAS3 << 'EOF'
@@ -125,7 +125,7 @@ sudo /var/packages/ContainerManager/target/usr/bin/docker compose ps
 EOF
 ```
 
-- ⬜ **C-61**: Health Check lokal
+- ✅ **C-61**: Health Check lokal
 
 ```bash
 ssh Benki-NAS3 "curl -sf http://127.0.0.1:18789/health && echo 'OK' || echo 'FAIL'"
@@ -135,26 +135,26 @@ ssh Benki-NAS3 "curl -sf http://127.0.0.1:18789/health && echo 'OK' || echo 'FAI
 
 ## Phase 7: Tailscale Serve
 
-- ⬜ **C-70**: Tailscale Serve aktivieren
+- ✅ **C-70**: Tailscale Serve aktivieren (Port 8443, da Port 443 = Home Assistant)
 
 ```bash
 ssh Benki-NAS3 << 'EOF'
-sudo /var/packages/Tailscale/target/bin/tailscale serve --bg 18789
+sudo /var/packages/Tailscale/target/bin/tailscale serve --bg --https 8443 18789
 sudo /var/packages/Tailscale/target/bin/tailscale serve status
 EOF
 ```
 
-- ⬜ **C-71**: HTTPS-Zugriff über Tailnet testen
+- ✅ **C-71**: HTTPS-Zugriff über Tailnet testen
 
 ```bash
-curl -sf https://benki-nas3.tail73ca5d.ts.net/health && echo 'Tailscale Serve OK' || echo 'FAIL'
+curl -sf https://benki-nas3.tail73ca5d.ts.net:8443/ && echo 'Tailscale Serve OK' || echo 'FAIL'
 ```
 
 ---
 
 ## Phase 8: Telegram Bot einrichten
 
-- ⬜ **C-80**: Telegram-Channel hinzufügen
+- ✅ **C-80**: Telegram-Channel konfiguriert (channels.telegram.enabled + TELEGRAM_BOT_TOKEN in .env)
 
 ```bash
 ssh Benki-NAS3 << 'EOF'
@@ -187,7 +187,7 @@ EOF
 
 ## Phase 10: Verifikation
 
-- ⬜ **C-100**: Vollständiger Systemtest
+- ✅ **C-100**: Vollständiger Systemtest
 
 ```bash
 ssh Benki-NAS3 << 'EOF'
