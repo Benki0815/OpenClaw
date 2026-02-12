@@ -211,3 +211,38 @@ echo "=== Config-Rechte ==="
 ls -la /volume1/docker/openclaw/config/
 EOF
 ```
+
+---
+
+## Phase 11: Web-Tools (Internet-Zugang für den Bot)
+
+- ✅ **C-110**: Web-Tools in Config aktiviert (web_search + web_fetch)
+
+> **Details**: `web_fetch` ist standardmäßig aktiv (HTTP GET + Content-Extraktion).  
+> `web_search` nutzt Perplexity Sonar via OpenRouter (kein extra API-Key nötig,  
+> da `OPENROUTER_API_KEY` bereits in `.env`).
+
+```json
+"tools": {
+  "web": {
+    "search": {
+      "enabled": true,
+      "provider": "perplexity",
+      "perplexity": {
+        "baseUrl": "https://openrouter.ai/api/v1",
+        "model": "perplexity/sonar-pro"
+      }
+    },
+    "fetch": {
+      "enabled": true
+    }
+  }
+}
+```
+
+- ✅ **C-111**: Config deployed + Hot-Reload bestätigt (kein Gateway-Restart nötig)
+
+> **Hinweis**: `tools`-Einstellungen werden automatisch hot-reloaded.  
+> Gateway-Log: `[reload] config change applied (dynamic reads: tools)`
+
+- ✅ **C-112**: Config-Example im Repo aktualisiert (`config/openclaw.json.example`)
