@@ -246,3 +246,40 @@ EOF
 > Gateway-Log: `[reload] config change applied (dynamic reads: tools)`
 
 - ✅ **C-112**: Config-Example im Repo aktualisiert (`config/openclaw.json.example`)
+
+---
+
+## Phase 12: Google Workspace Integration (gog/gogcli)
+
+- ✅ **C-120**: gogcli v0.9.0 Binary im Container installiert (`/usr/local/bin/gog`)
+
+> **Details**: Binary heruntergeladen von GitHub Release `gogcli_0.9.0_linux_amd64.tar.gz`  
+> via `curl -fsSL`. Installiert als root in `/usr/local/bin/gog`.
+
+- ✅ **C-121**: Google Cloud Projekt erstellt (`projektschlaubi-487220`)
+
+> **Details**: OAuth Client ID + Secret erstellt, APIs aktiviert:  
+> Gmail, Calendar, Drive, Docs, Sheets, People, Tasks.  
+> Account: `schlaubi@protonmail.com` (kein Gmail, Protonmail als Google-Konto).
+
+- ✅ **C-122**: OAuth-Credentials im Container registriert
+
+> `gog auth credentials /tmp/client_secret.json` → Keyring: file-Backend  
+> Config-Pfad: `/home/node/.config/gogcli/`
+
+- ✅ **C-123**: OAuth-Auth-Flow abgeschlossen (Manual/Headless)
+
+> `gog auth add schlaubi@protonmail.com --services calendar,drive,docs,contacts,tasks,sheets --manual --force-consent`  
+> Token erfolgreich ausgetauscht via FIFO-Pipe (tail -f) Methode.
+
+- ✅ **C-124**: Persistenz konfiguriert (Volume-Mounts + Env-Variablen)
+
+> - `docker-compose.yml`: Volume-Mounts für gog-Binary und Config  
+>   - `./gog/gog-binary:/usr/local/bin/gog:ro`  
+>   - `./gog:/home/node/.config/gogcli`  
+> - `.env`: `GOG_KEYRING_BACKEND`, `GOG_KEYRING_PASSWORD`, `GOG_ACCOUNT`  
+> - Container-Neustart bestätigt: gog + Auth funktioniert persistent.
+
+- ✅ **C-125**: Google APIs getestet (Calendar, Drive, Contacts, Tasks)
+
+> Alle APIs funktionieren nach Container-Neustart.

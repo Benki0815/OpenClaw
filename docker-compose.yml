@@ -23,6 +23,9 @@ services:
     volumes:
       - ./config:/home/node/.openclaw
       - ./workspace:/home/node/.openclaw/workspace
+      # gog (Google Workspace CLI) – Binary + Config persistent mounten
+      - ./gog/gog-binary:/usr/local/bin/gog:ro
+      - ./gog:/home/node/.config/gogcli
     ports:
       # NUR localhost – kein LAN-Zugriff! Tailscale Serve macht den Rest.
       - "127.0.0.1:18789:18789"

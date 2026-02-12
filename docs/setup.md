@@ -299,3 +299,66 @@ grep OPENCLAW_GATEWAY_TOKEN /volume1/docker/openclaw/.env
 # Dashboard-URL mit Token anzeigen
 sudo docker compose run --rm openclaw-cli dashboard --no-open
 ```
+
+---
+
+## Phase 12: Google Workspace (gog/gogcli)
+
+### Übersicht
+
+Schlaubi hat über die `gog`-Skill (built-in) Zugriff auf Google Workspace:
+- **Calendar**: Termine erstellen, abfragen, einladen
+- **Drive**: Dateien hochladen, teilen, verwalten
+- **Docs / Sheets**: Dokumente erstellen und bearbeiten
+- **Contacts**: Kontakte verwalten
+- **Tasks**: Aufgabenlisten verwalten
+
+> **Kein Gmail**: Der Account `schlaubi@protonmail.com` ist ein Google-Konto ohne Gmail.
+> E-Mail-Versand läuft separat über Protonmail SMTP (spätere Phase).
+
+### Dateien auf dem NAS
+
+```
+/volume1/docker/openclaw/gog/
+├── gog-binary          # gogcli v0.9.0 (Linux amd64)
+├── config.json         # Keyring-Konfiguration (file backend)
+├── credentials.json    # OAuth Client ID + Secret
+└── keyring/            # Verschlüsselte OAuth-Tokens
+```
+
+### Volume-Mounts (docker-compose.yml)
+
+```yaml
+volumes:
+  - ./gog/gog-binary:/usr/local/bin/gog:ro
+  - ./gog:/home/node/.config/gogcli
+```
+
+### Env-Variablen (.env)
+
+```bash
+GOG_KEYRING_BACKEND=file
+GOG_KEYRING_PASSWORD=<keyring-passwort>
+GOG_ACCOUNT=schlaubi@protonmail.com
+```
+
+### Verifizierung
+
+```bash
+# Im Container
+docker exec openclaw-gateway gog --version
+docker exec openclaw-gateway gog auth list
+docker exec openclaw-gateway gog calendar calendars
+docker exec openclaw-gateway gog drive ls
+```
+
+### OAuth-Token erneuern (falls nötig)
+
+```bash
+# Token erneuern (z.B. nach 6 Monaten Inaktivität)
+docker exec -it openclaw-gateway sh -c \
+  "gog auth add schlaubi@protonmail.com \
+   --services calendar,drive,docs,contacts,tasks,sheets \
+   --manual --force-consent"
+# Auth-URL öffnen, redirect-URL zurück einfügen
+```
