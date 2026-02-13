@@ -230,7 +230,7 @@ EOF
       "provider": "perplexity",
       "perplexity": {
         "baseUrl": "https://openrouter.ai/api/v1",
-        "model": "perplexity/sonar-pro"
+        "model": "perplexity/sonar"
       }
     },
     "fetch": {
@@ -283,3 +283,25 @@ EOF
 - ✅ **C-125**: Google APIs getestet (Calendar, Drive, Contacts, Tasks)
 
 > Alle APIs funktionieren nach Container-Neustart.
+
+---
+
+## Phase 13: Memory Search Fix
+
+- ✅ **C-130**: `memorySearch` auf lokalen Embedding-Provider umgestellt
+
+> **Problem**: `memory_search` suchte standardmäßig nach API-Keys für openai/google/voyage  
+> und schlug fehl (Billing-Error-Meldung im Chat). Kein echtes Billing-Problem –  
+> es fehlten schlicht die Embedding-API-Keys.  
+>  
+> **Lösung**: `agents.defaults.memorySearch.provider = "local"` mit `fallback = "none"`.  
+> Verwendet jetzt lokale Embeddings (node-llama-cpp, ~0.6 GB GGUF-Modell).  
+> Kein externer API-Key nötig.  
+>  
+> **Config-Änderung**: Per Python-Script direkt auf dem NAS eingefügt.  
+> Hot-Reload bestätigt: `[reload] config change applied (dynamic reads: agents.defaults.memorySearch)`  
+>  
+> **Hinweis**: Falls die CPU-Last auf dem Celeron J4025 zu hoch wird,  
+> kann später auf Gemini-Embeddings umgestellt werden (kostenloser API-Key).
+
+- ✅ **C-131**: Config-Example im Repo aktualisiert (`config/openclaw.json.example`)
