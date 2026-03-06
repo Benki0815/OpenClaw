@@ -5,7 +5,8 @@
       "allowTailscale": true
     },
     "controlUi": {
-      "allowInsecureAuth": true
+      "allowInsecureAuth": true,
+      "allowedOrigins": ["https://<YOUR_TAILSCALE_HOSTNAME>:8443"]
     }
   },
   "messages": {
