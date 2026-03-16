@@ -1,12 +1,18 @@
 {
   "gateway": {
-    "trustedProxies": ["172.26.0.1"],
+    "trustedProxies": [
+      "172.25.0.1"
+    ],
     "auth": {
-      "allowTailscale": true
+      "mode": "trusted-proxy",
+      "trustedProxy": {
+        "userHeader": "tailscale-user-login"
+      }
     },
     "controlUi": {
-      "allowInsecureAuth": true,
-      "allowedOrigins": ["https://<YOUR_TAILSCALE_HOSTNAME>:8443"]
+      "allowedOrigins": [
+        "https://benki-nas3.tail73ca5d.ts.net:8443"
+      ]
     }
   },
   "messages": {
@@ -15,16 +21,34 @@
   "agents": {
     "defaults": {
       "maxConcurrent": 4,
-      "subagents": { "maxConcurrent": 8 },
-      "compaction": { "mode": "safeguard" },
-      "model": { "primary": "openrouter/openai/gpt-5-mini" },
+      "subagents": {
+        "maxConcurrent": 8
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "model": {
+        "primary": "openrouter/openai/gpt-5-mini"
+      },
       "models": {
-        "openrouter/anthropic/claude-opus-4.5": { "alias": "Opus" },
-        "openrouter/openai/gpt-5-mini": { "alias": "GPT5-Mini" },
-        "openrouter/openai/gpt-5.2": { "alias": "GPT5.2" },
-        "openrouter/google/gemini-2.0-flash-001": { "alias": "Gemini-Flash" },
-        "openrouter/google/gemini-3-flash-preview": { "alias": "Gemini3-Flash" },
-        "openrouter/moonshotai/kimi-k2.5": { "alias": "Kimi" }
+        "openrouter/anthropic/claude-opus-4.5": {
+          "alias": "Opus"
+        },
+        "openrouter/openai/gpt-5-mini": {
+          "alias": "GPT5-Mini"
+        },
+        "openrouter/openai/gpt-5.2": {
+          "alias": "GPT5.2"
+        },
+        "openrouter/google/gemini-2.0-flash-001": {
+          "alias": "Gemini-Flash"
+        },
+        "openrouter/google/gemini-3-flash-preview": {
+          "alias": "Gemini3-Flash"
+        },
+        "openrouter/moonshotai/kimi-k2.5": {
+          "alias": "Kimi"
+        }
       },
       "memorySearch": {
         "provider": "local",
@@ -49,7 +73,9 @@
   },
   "plugins": {
     "entries": {
-      "telegram": { "enabled": true }
+      "telegram": {
+        "enabled": true
+      }
     }
   },
   "channels": {
@@ -58,6 +84,12 @@
       "dmPolicy": "pairing"
     }
   },
-  "discovery": { "mdns": { "mode": "off" } },
-  "logging": { "redactSensitive": "tools" }
+  "discovery": {
+    "mdns": {
+      "mode": "off"
+    }
+  },
+  "logging": {
+    "redactSensitive": "tools"
+  }
 }
