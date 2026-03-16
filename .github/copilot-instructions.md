@@ -55,6 +55,14 @@
 - Bei Unsicherheit zuerst pruefen (z.B. ls, docker ps, docker compose ps).
 - Aenderungen kurz dokumentieren.
 
+## Schlaubi (OC Agent) Kommunikation
+- Schlaubi ist der OpenClaw-Agent auf dem NAS (Telegram: @BenkisSchlaubiBot, Chat-ID: 1960260229).
+- Copilot kann mit Schlaubi per CLI kommunizieren: `openclaw agent -m "..." --json` (via docker exec auf dem NAS).
+- Schlaubis Antwort kommt synchron als JSON zurueck.
+- Mit `--deliver` wird die Antwort zusaetzlich an Telegram gesendet.
+- Schlaubi kann NICHT direkt an Copilot schreiben (kein Rueckkanal). Indirekt ueber Workspace-Dateien moeglich.
+- Vollstaendige Doku: docs/schlaubi_kommunikation.md
+
 ## OpenClaw-spezifische Regeln
 - Secrets (API-Keys, Tokens) NIEMALS im Repo speichern. Nur in .env auf dem NAS.
 - .env.example als Template im Repo pflegen, aber ohne echte Werte.
