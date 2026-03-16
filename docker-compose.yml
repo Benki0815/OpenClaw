@@ -37,6 +37,9 @@ services:
     # Security Hardening
     security_opt:
       - no-new-privileges:true
+    # Docker-Socket-Zugriff: node-User braucht GID 0 für /var/run/docker.sock (root:root 660)
+    group_add:
+      - "0"
     extra_hosts:
       # Damit OpenClaw den Home Assistant auf dem Host erreichen kann (spätere Phase)
       - "host.docker.internal:host-gateway"
