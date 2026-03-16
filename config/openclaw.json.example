@@ -56,8 +56,8 @@
       },
       "sandbox": {
         "mode": "non-main",
-        "scope": "session",
-        "workspaceAccess": "rw",
+        "scope": "agent",
+        "workspaceAccess": "none",
         "docker": {
           "image": "openclaw-sandbox:bookworm-slim",
           "network": "none",

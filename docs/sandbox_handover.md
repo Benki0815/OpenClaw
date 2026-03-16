@@ -27,8 +27,8 @@ Du (Schlaubi) hast jetzt eine **Docker-Sandbox** zur Verfügung. Das bedeutet: W
 ### Sandbox-Modus
 
 - **Modus:** `non-main` – Dein Hauptchat (Telegram DM) läuft normal. Sub-Tasks und Skriptausführungen werden automatisch in die Sandbox geleitet.
-- **Scope:** `session` – Jede Session bekommt ihren eigenen isolierten Container.
-- **Workspace:** `rw` (read/write) – Du kannst Dateien im Workspace lesen und schreiben.
+- **Scope:** `agent` – Jeder Agent bekommt seinen eigenen isolierten Container.
+- **Workspace:** `none` – Kein direkter Workspace-Zugriff (DinD-Kompatibilität). Dateien werden über Gateway-Tools gelesen/geschrieben.
 
 ---
 
@@ -39,11 +39,11 @@ Du (Schlaubi) hast jetzt eine **Docker-Sandbox** zur Verfügung. Das bedeutet: W
 - ✅ Daten analysieren (CSV, Excel, JSON)
 - ✅ Plots und Visualisierungen erstellen
 - ✅ Shell-Befehle im Workspace ausführen (grep, awk, sort etc.)
-- ✅ Dateien im Workspace lesen und schreiben
+- ✅ Dateien im Workspace über Gateway-Tools (fs_read, fs_write) lesen und schreiben
 
 ### Was du NICHT KANNST (by design):
 - ❌ **Kein Netzwerk** – Der Sandbox-Container hat `network: none`. Keine HTTP-Requests, keine API-Calls, kein Internet aus der Sandbox heraus.
-- ❌ **Kein Zugriff auf andere Container** – Du siehst nur deinen eigenen Workspace, keine anderen Docker-Container, keine anderen Volumes.
+- ❌ **Kein direkter Workspace-Mount** – Wegen Docker-in-Docker (DinD) hat die Sandbox keinen direkten Zugriff auf `/workspace`. Dateien müssen über Gateway-Tools gelesen/geschrieben werden.
 - ❌ **Kein Zugriff auf NAS-Dateien** außerhalb des Workspace – `/volume1/docker/openclaw/workspace` ist dein Spielfeld, sonst nichts.
 - ❌ **Kein Docker-Socket** in der Sandbox – Du kannst keine Container starten, stoppen oder inspizieren.
 - ❌ **Keine Gateway/Config-Änderungen** – Die Tools `gateway`, `cron` und `sessions_spawn` sind gesperrt.
@@ -58,7 +58,7 @@ Die Tools `web_search` und `web_fetch` funktionieren weiterhin **direkt über de
 
 | Pfad (im Container) | Pfad (auf dem NAS) | Zweck |
 |---|---|---|
-| `/workspace` | `/volume1/docker/openclaw/workspace` | Dein Hauptarbeitsverzeichnis |
+| `~/.openclaw/sandboxes/` | Container-intern | Temporäre Sandbox-Arbeitsdaten |
 | Sandbox-Daten | `/volume1/docker/openclaw/config/sandboxes/` | Temporäre Sandbox-Workspaces |
 
 ---
@@ -96,8 +96,8 @@ Die Tools `web_search` und `web_fetch` funktionieren weiterhin **direkt über de
 {
   "sandbox": {
     "mode": "non-main",
-    "scope": "session",
-    "workspaceAccess": "rw",
+    "scope": "agent",
+    "workspaceAccess": "none",
     "docker": {
       "image": "openclaw-sandbox:bookworm-slim",
       "network": "none",
