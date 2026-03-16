@@ -35,7 +35,7 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     openpyxl \
     python-dateutil \
     tabulate \
-    pandas-ta \
+    ta \
     backtrader \
     pyfolio-reloaded \
     empyrical-reloaded \
