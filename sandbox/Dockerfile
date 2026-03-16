@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 ENV LANG=en_US.UTF-8
 
-# Install Python packages (data analysis, plotting, HTTP)
+# Install Python packages (data analysis, plotting, HTTP, trading/backtesting)
 RUN pip3 install --no-cache-dir --break-system-packages \
     pandas \
     matplotlib \
@@ -34,7 +34,15 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     numpy \
     openpyxl \
     python-dateutil \
-    tabulate
+    tabulate \
+    pandas-ta \
+    backtrader \
+    pyfolio-reloaded \
+    empyrical-reloaded \
+    scikit-learn \
+    influxdb-client \
+    python-dotenv \
+    pyyaml
 
 # Create non-root sandbox user (UID 1000 matches OC's node user)
 RUN groupadd -g 1000 sandbox && \
