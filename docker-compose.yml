@@ -23,6 +23,8 @@ services:
     volumes:
       - ./config:/home/node/.openclaw
       - ./workspace:/home/node/.openclaw/workspace
+      # Sandbox: Docker-Socket (nötig damit OC Sandbox-Container spawnen kann)
+      - /var/run/docker.sock:/var/run/docker.sock
       # gog (Google Workspace CLI) – Binary + Config persistent mounten
       - ./gog/gog-binary:/usr/local/bin/gog:ro
       - ./gog:/home/node/.config/gogcli

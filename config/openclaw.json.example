@@ -53,6 +53,96 @@
       "memorySearch": {
         "provider": "local",
         "fallback": "none"
+      },
+      "sandbox": {
+        "mode": "non-main",
+        "scope": "session",
+        "workspaceAccess": "rw",
+        "docker": {
+          "image": "openclaw-sandbox:bookworm-slim",
+          "network": "none",
+          "readOnlyRoot": false,
+          "user": "1000:1000"
+        }
+      }
+    }
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": true,
+        "provider": "perplexity",
+        "perplexity": {
+          "baseUrl": "https://openrouter.ai/api/v1",
+          "model": "perplexity/sonar"
+        }
+      },
+      "fetch": {
+        "enabled": true
+      }
+    },
+    "fs": {
+      "workspaceOnly": true
+    },
+    "deny": ["gateway", "cron", "sessions_spawn"]
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      }
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "pairing"
+    }
+  },
+  "discovery": {
+    "mdns": {
+      "mode": "off"
+    }
+  },
+  "logging": {
+    "redactSensitive": "tools"
+  }
+}
+  "agents": {
+    "defaults": {
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "model": {
+        "primary": "openrouter/openai/gpt-5-mini"
+      },
+      "models": {
+        "openrouter/anthropic/claude-opus-4.5": {
+          "alias": "Opus"
+        },
+        "openrouter/openai/gpt-5-mini": {
+          "alias": "GPT5-Mini"
+        },
+        "openrouter/openai/gpt-5.2": {
+          "alias": "GPT5.2"
+        },
+        "openrouter/google/gemini-2.0-flash-001": {
+          "alias": "Gemini-Flash"
+        },
+        "openrouter/google/gemini-3-flash-preview": {
+          "alias": "Gemini3-Flash"
+        },
+        "openrouter/moonshotai/kimi-k2.5": {
+          "alias": "Kimi"
+        }
+      },
+      "memorySearch": {
+        "provider": "local",
+        "fallback": "none"
       }
     }
   },
